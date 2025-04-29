@@ -96,9 +96,9 @@ else:
 
 #  Preflop Calculation
 with col_calc_preflop:
-    if st.button('🎯 Calculate Pre-Flop Win Probability'):
+    if st.button('Calculate Pre-Flop Win Probability'):
         if len(st.session_state.my_cards) == 2:
-            with st.spinner('Simulating games...'):
+            with st.spinner('Simulating games...', show_time=True):
                 prob_preflop = simulator.calculate_win_probability(
                     my_cards=st.session_state.my_cards,
                     flop_cards=None,
@@ -118,7 +118,7 @@ with col_calc_preflop:
 #___________________________--------------___________________________-------------_______________________________
 
 # --- Step 4: FLOP
-st.header("3️⃣ Flop Cards")
+st.header("Flop Cards")
 
 col_card1_flop, col_card2_flop, col_card3_flop, col_num_player_flop, col_calc_flop = st.columns(5)
 
@@ -170,9 +170,9 @@ with col_num_player_flop:
     st.session_state.players_flop = st.slider("Including you", 2, 9, st.session_state.players_flop, key="payers_flop")
 
 with col_calc_flop:
-    if st.button('🎯 Calculate Flop Win Probability'):
+    if st.button('Calculate Flop Win Probability'):
         if len(st.session_state.my_cards) == 2:
-            with st.spinner('Simulating games...'):
+            with st.spinner('Simulating games...', show_time=True):
                 prob_flop = simulator.calculate_win_probability(
                     my_cards=st.session_state.my_cards,
                     flop_cards=[st.session_state.selected_card3+st.session_state.selected_suit3,
@@ -223,9 +223,9 @@ with col_num_player_turn:
     st.session_state.players_turn = st.slider("Including you", 2, 9, st.session_state.players_turn, key="payers_turn")
 
 with col_calc_turn:
-    if st.button('🎯 Calculate Turn Win Probability'):
+    if st.button('Calculate Turn Win Probability'):
         if len(st.session_state.my_cards) == 2:
-            with st.spinner('Simulating games...'):
+            with st.spinner('Simulating games...', show_time=True):
                 prob_turn = simulator.calculate_win_probability(
                     my_cards=st.session_state.my_cards,
                     flop_cards=[st.session_state.selected_card3+st.session_state.selected_suit3,
@@ -275,9 +275,9 @@ with col_num_player_river:
     st.session_state.players_river = st.slider("Including you", 2, 9, st.session_state.players_river, key="payers_river")
 
 with col_calc_river:
-    if st.button('🎯 Calculate River Win Probability'):
+    if st.button('Calculate River Win Probability'):
         if len(st.session_state.my_cards) == 2:
-            with st.spinner('Simulating games...'):
+            with st.spinner('Simulating games...', show_time=True):
                 prob_river = simulator.calculate_win_probability(
                     my_cards=st.session_state.my_cards,
                     flop_cards=[st.session_state.selected_card3+st.session_state.selected_suit3,
