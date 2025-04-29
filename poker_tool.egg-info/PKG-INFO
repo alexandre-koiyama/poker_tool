@@ -1,0 +1,31 @@
+Metadata-Version: 2.2
+Name: poker_tool
+Version: 0.1
+Summary: A poker win calculator using Python
+Home-page: https://github.com/alexandre-koiyama/poker_tool
+Author: Alexandre K
+Author-email: alexandre.koiyama@outlook.com
+Classifier: Programming Language :: Python :: 3
+Classifier: Operating System :: OS Independent
+Requires-Python: >=3.7
+Description-Content-Type: text/markdown
+Requires-Dist: treys
+Dynamic: author
+Dynamic: author-email
+Dynamic: classifier
+Dynamic: description
+Dynamic: description-content-type
+Dynamic: home-page
+Dynamic: requires-dist
+Dynamic: requires-python
+Dynamic: summary
+
+# Poker Tool Probability Calculator
+
+Simulate poker hand probabilities given hole cards and known community cards (Flop, Turn, River).
+
+## How to Use
+
+```bash
+pip install -r requirements.txt
+python examples/example_run.py
