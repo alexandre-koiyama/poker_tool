@@ -34,9 +34,6 @@ if 'my_cards' not in st.session_state or st.button('Start New Game'):
     st.session_state.selected_suit1 = None
     st.session_state.selected_card2 = None
     st.session_state.selected_suit2 = None
-    
-
-
 
 
 # --- Step 1: Select Hole Cards
@@ -46,59 +43,52 @@ col_hand1_preflop, col_hand2_preflop, col_num_player_preflop, col_calc_preflop =
 
 # Hand card 1 selection
 with col_hand1_preflop:
-    col_num1, col_suit1 = st.columns(2)
-    with col_num1:
-        select_num1 = st.pills("Card 1", ranks, selection_mode='single', key="select_num1")
-        st.session_state.selected_card1 = select_num1
-    with col_suit1:
-        select_suit1 = st.pills("Suit 1", symbols, selection_mode='single', key="select_suit1")
-        if select_suit1 == '♠️':
-            st.session_state.selected_suit1 = 's'
-        elif select_suit1 == '♣️':
-            st.session_state.selected_suit1 = 'c'
-        elif select_suit1 == '♦️':
-            st.session_state.selected_suit1 = 'd'
-        elif select_suit1 == '♥️':
-            st.session_state.selected_suit1 = 'h'
+    select_num1 = st.pills("Card 1", ranks, selection_mode='single', key="select_num1")
+    st.session_state.selected_card1 = select_num1
+    select_suit1 = st.pills("Suit 1", symbols, selection_mode='single', key="select_suit1")
+    if select_suit1 == '♠️':
+        st.session_state.selected_suit1 = 's'
+    elif select_suit1 == '♣️':
+        st.session_state.selected_suit1 = 'c'
+    elif select_suit1 == '♦️':
+        st.session_state.selected_suit1 = 'd'
+    elif select_suit1 == '♥️':
+        st.session_state.selected_suit1 = 'h'
 
 # Hand card 2 selection
 with col_hand2_preflop:
-    col_num2, col_suit2 = st.columns(2)
-    with col_num2:
-        select_num2 = st.pills("Card 2", ranks, selection_mode='single', key="select_num2")
-        st.session_state.selected_card2 = select_num2
-            
-    with col_suit2:
-        select_suit2 = st.pills("Suit 2", symbols, selection_mode='single', key="select_suit2")
-        if select_suit2 == '♠️':
-            st.session_state.selected_suit2 = 's'
-        elif select_suit2 == '♣️':
-            st.session_state.selected_suit2 = 'c'
-        elif select_suit2 == '♦️':
-            st.session_state.selected_suit2 = 'd'
-        elif select_suit2 == '♥️':
-            st.session_state.selected_suit2 = 'h'
-
-
-with col_num_player_preflop:
-    st.write("Number of Players Pre-Flop")
-    st.session_state.players_preflop = st.slider("Including you", 2, 9, st.session_state.players_preflop, key="payers_preflop")
+    select_num2 = st.pills("Card 2", ranks, selection_mode='single', key="select_num2")
+    st.session_state.selected_card2 = select_num2
+        
+#with col_suit2:
+    select_suit2 = st.pills("Suit 2", symbols, selection_mode='single', key="select_suit2")
+    if select_suit2 == '♠️':
+        st.session_state.selected_suit2 = 's'
+    elif select_suit2 == '♣️':
+        st.session_state.selected_suit2 = 'c'
+    elif select_suit2 == '♦️':
+        st.session_state.selected_suit2 = 'd'
+    elif select_suit2 == '♥️':
+        st.session_state.selected_suit2 = 'h'
 
 card1 = st.session_state.selected_card1 + st.session_state.selected_suit1 if st.session_state.selected_card1 and st.session_state.selected_suit1 else None
 card2 = st.session_state.selected_card2 + st.session_state.selected_suit2 if st.session_state.selected_card2 and st.session_state.selected_suit2 else None
 
-if card1 and card2 and card1 != card2:
-    st.session_state.my_cards = [card1, card2]
-    st.success(f"HAND - {st.session_state.selected_card1}{suits_symbols[st.session_state.selected_suit1]} "
-               f"{st.session_state.selected_card2}{suits_symbols[st.session_state.selected_suit2]}")
-else:
-    st.warning("Please select valid and different cards.")
+with col_num_player_preflop:
+    st.write("Players Pre-Flop")
+    st.session_state.players_preflop = st.slider("Including you", 2, 9, st.session_state.players_preflop, key="payers_preflop")
+    if card1 and card2 and card1 != card2:
+        st.session_state.my_cards = [card1, card2]
+        st.info(f"HAND {st.session_state.selected_card1}{suits_symbols[st.session_state.selected_suit1]} "
+                f"{st.session_state.selected_card2}{suits_symbols[st.session_state.selected_suit2]}")
+    else:
+        st.warning("Please select both hole cards first.")
 
 #  Preflop Calculation
 with col_calc_preflop:
-    if st.button('Calculate Pre-Flop Win Probability'):
+    if st.button("Pre-Flop Win Probability",  type='secondary', use_container_width=True):
         if len(st.session_state.my_cards) == 2:
-            with st.spinner('Simulating games...', show_time=True):
+            with st.spinner('Calculating...', show_time=True):
                 prob_preflop = simulator.calculate_win_probability(
                     my_cards=st.session_state.my_cards,
                     flop_cards=None,
@@ -107,10 +97,10 @@ with col_calc_preflop:
                     num_players=st.session_state.players_preflop
                 )
             st.session_state.preflop_probability = prob_preflop
-            #st.success(f"Pre-flop Win Probability: {st.session_state.preflop_probability:.2%}")
             st.session_state.step = 'flop'
         else:
             st.warning("Please select both hole cards first.")
+    st.write(" ")
     if st.session_state.preflop_probability:
         st.success(f"Pre-flop Win Probability: {st.session_state.preflop_probability:.2%}")
     
@@ -158,21 +148,24 @@ with col_card3_flop:
     elif st.session_state.selected_suit5 == '♥️':
         st.session_state.selected_suit5 = 'h'
 
-st.success(f"HAND - {st.session_state.selected_card1}{suits_symbols[st.session_state.selected_suit1]} "
-            f"{st.session_state.selected_card2}{suits_symbols[st.session_state.selected_suit2]}")
-st.success(f"FLOP CARDS - {st.session_state.selected_card3}{suits_symbols[st.session_state.selected_suit3]} "
-            f"{st.session_state.selected_card4}{suits_symbols[st.session_state.selected_suit4]} "
-            f"{st.session_state.selected_card5}{suits_symbols[st.session_state.selected_suit5]}")
+
 
 #update number of players
 with col_num_player_flop:
-    st.write("Number of Players in Flop")
-    st.session_state.players_flop = st.slider("Including you", 2, 9, st.session_state.players_flop, key="payers_flop")
+    st.write("Players in Flop")
+    st.session_state.players_flop = st.slider("Including you", 2, st.session_state.players_preflop, st.session_state.players_preflop, key="payers_flop")
+    st.write(" ")
+    if st.session_state.selected_card3 and st.session_state.selected_card4 and st.session_state.selected_card5:
+        st.info(f"HAND {st.session_state.selected_card1}{suits_symbols[st.session_state.selected_suit1]} "
+                f"{st.session_state.selected_card2}{suits_symbols[st.session_state.selected_suit2]}")
+        st.info(f"FLOP CARDS {st.session_state.selected_card3}{suits_symbols[st.session_state.selected_suit3]} "
+                f"{st.session_state.selected_card4}{suits_symbols[st.session_state.selected_suit4]} "
+                f"{st.session_state.selected_card5}{suits_symbols[st.session_state.selected_suit5]}")
 
 with col_calc_flop:
-    if st.button('Calculate Flop Win Probability'):
+    if st.button('Flop Win Probability'):
         if len(st.session_state.my_cards) == 2:
-            with st.spinner('Simulating games...', show_time=True):
+            with st.spinner('Calculating...', show_time=True):
                 prob_flop = simulator.calculate_win_probability(
                     my_cards=st.session_state.my_cards,
                     flop_cards=[st.session_state.selected_card3+st.session_state.selected_suit3,
@@ -209,23 +202,23 @@ with col_card1_turn:
         st.session_state.selected_suit6 = 'h'
 
 
-st.success(f"HAND - {st.session_state.selected_card1}{suits_symbols[st.session_state.selected_suit1]} "
-            f"{st.session_state.selected_card2}{suits_symbols[st.session_state.selected_suit2]}")
-st.success(f"BOARD CARDS - {st.session_state.selected_card3}{suits_symbols[st.session_state.selected_suit3]} "
-            f"{st.session_state.selected_card4}{suits_symbols[st.session_state.selected_suit4]} "
-            f"{st.session_state.selected_card5}{suits_symbols[st.session_state.selected_suit5]}"
-            f"{st.session_state.selected_card6}{suits_symbols[st.session_state.selected_suit6]}")
-
-
 #update number of players
 with col_num_player_turn:
     st.write("Number of Players in Turn")
-    st.session_state.players_turn = st.slider("Including you", 2, 9, st.session_state.players_turn, key="payers_turn")
+    st.session_state.players_turn = st.slider("Including you", 2, st.session_state.players_flop, st.session_state.players_flop, key="payers_turn")
+
+    if st.session_state.selected_card3 and st.session_state.selected_card4 and st.session_state.selected_card5 and st.session_state.selected_card6:
+        st.info(f"HAND {st.session_state.selected_card1}{suits_symbols[st.session_state.selected_suit1]} "
+                f"{st.session_state.selected_card2}{suits_symbols[st.session_state.selected_suit2]}")
+        st.info(f"FLOP CARDS {st.session_state.selected_card3}{suits_symbols[st.session_state.selected_suit3]} "
+                f"{st.session_state.selected_card4}{suits_symbols[st.session_state.selected_suit4]} "
+                f"{st.session_state.selected_card5}{suits_symbols[st.session_state.selected_suit5]}"
+                f"{st.session_state.selected_card6}{suits_symbols[st.session_state.selected_suit6]}")
 
 with col_calc_turn:
     if st.button('Calculate Turn Win Probability'):
         if len(st.session_state.my_cards) == 2:
-            with st.spinner('Simulating games...', show_time=True):
+            with st.spinner('Calculating...', show_time=True):
                 prob_turn = simulator.calculate_win_probability(
                     my_cards=st.session_state.my_cards,
                     flop_cards=[st.session_state.selected_card3+st.session_state.selected_suit3,
@@ -261,23 +254,25 @@ with col_card1_river:
     elif st.session_state.selected_suit7 == '♥️':
         st.session_state.selected_suit7 = 'h'
 
-st.success(f"HAND - {st.session_state.selected_card1}{suits_symbols[st.session_state.selected_suit1]} "
-            f"{st.session_state.selected_card2}{suits_symbols[st.session_state.selected_suit2]}")
-st.success(f"BOARD CARDS - {st.session_state.selected_card3}{suits_symbols[st.session_state.selected_suit3]} "
-            f"{st.session_state.selected_card4}{suits_symbols[st.session_state.selected_suit4]} "
-            f"{st.session_state.selected_card5}{suits_symbols[st.session_state.selected_suit5]}"
-            f"{st.session_state.selected_card6}{suits_symbols[st.session_state.selected_suit6]}"
-            f"{st.session_state.selected_card7}{suits_symbols[st.session_state.selected_suit7]}")
+
 
 #update number of players
 with col_num_player_river:
     st.write("Number of Players in River")
-    st.session_state.players_river = st.slider("Including you", 2, 9, st.session_state.players_river, key="payers_river")
+    st.session_state.players_river = st.slider("Including you", 2, st.session_state.players_turn, st.session_state.players_turn, key="payers_river")
+    if st.session_state.selected_card3 and st.session_state.selected_card4 and st.session_state.selected_card5 and st.session_state.selected_card6 and st.session_state.selected_card7:
+        st.info(f"HAND {st.session_state.selected_card1}{suits_symbols[st.session_state.selected_suit1]} "
+                f"{st.session_state.selected_card2}{suits_symbols[st.session_state.selected_suit2]}")
+        st.info(f"FLOP CARDS {st.session_state.selected_card3}{suits_symbols[st.session_state.selected_suit3]} "
+                f"{st.session_state.selected_card4}{suits_symbols[st.session_state.selected_suit4]} "
+                f"{st.session_state.selected_card5}{suits_symbols[st.session_state.selected_suit5]}"
+                f"{st.session_state.selected_card6}{suits_symbols[st.session_state.selected_suit6]}"
+                f"{st.session_state.selected_card7}{suits_symbols[st.session_state.selected_suit7]}")
 
 with col_calc_river:
     if st.button('Calculate River Win Probability'):
         if len(st.session_state.my_cards) == 2:
-            with st.spinner('Simulating games...', show_time=True):
+            with st.spinner('Calculating...', show_time=True):
                 prob_river = simulator.calculate_win_probability(
                     my_cards=st.session_state.my_cards,
                     flop_cards=[st.session_state.selected_card3+st.session_state.selected_suit3,
@@ -294,3 +289,7 @@ with col_calc_river:
 
     if st.session_state.river_probability:
             st.success(f"River Win Probability: {st.session_state.river_probability:.2%}")
+
+
+#Next steps
+# - show probability of winning hands for flop, turn and river (example for flop, hand =  9h,8h flop = 2h,5h,6c) - 50% of winning flush and 30% of winning straight 
