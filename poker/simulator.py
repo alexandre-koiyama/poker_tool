@@ -6,14 +6,13 @@ from hand_tiers import Tiers
 import random
 import time
 
-
 class PokerSimulator:
     def __init__(self, num_players=9, num_simulations=5000):
         self.num_players = num_players
         self.num_simulations = num_simulations
         self.evaluator = Evaluator()
 
-    def calculate_win_probability(self, my_cards, flop_cards=None, turn_card=None, river_card=None, num_players=None, tier=None):
+    def calculate_win_probability(self, my_cards, flop_cards=None, turn_card=None, river_card=None, num_players=None, tier='very low'):
         my_hand = [Card.create(c) for c in my_cards]
         known_board = []
         if flop_cards:
@@ -53,7 +52,6 @@ class PokerSimulator:
         all_pair_combinations = init_deck.get_allcombination_2cards()
         
         for _ in range(self.num_simulations):
-            start_time = time.time()
             deck = Deck()
             deck.remove_cards(my_hand + known_board)
             opponents = []
@@ -75,8 +73,6 @@ class PokerSimulator:
 
             if all(my_score <= opp_score for opp_score in opponents_scores):
                 wins += 1
-            end_time = time.time()
-            delta_time = end_time - start_time
-            print(f"Simulation {_} in {delta_time} seconds")
+    
         
         return wins / self.num_simulations
