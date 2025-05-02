@@ -4,6 +4,7 @@ from simulator import PokerSimulator
 # --- Initialize simulator
 simulator = PokerSimulator()
 
+
 # --- Card options
 ranks = ['2', '3', '4', '5', '6', '7', '8', '9', 'T', 'J', 'Q', 'K', 'A']
 suits_symbols = {'h': '♥️', 'd': '♦️', 'c': '♣️', 's': '♠️'}
@@ -34,6 +35,8 @@ if 'my_cards' not in st.session_state or st.button('Start New Game'):
     st.session_state.selected_suit1 = None
     st.session_state.selected_card2 = None
     st.session_state.selected_suit2 = None
+
+options_level = ["very low", "low", "medium", "high", "very high"]
 
 
 # --- Step 1: Select Hole Cards
@@ -86,6 +89,9 @@ with col_num_player_preflop:
 
 #  Preflop Calculation
 with col_calc_preflop:
+    st.write("Level: Pre-Flop")
+    selection_level = st.pills("Level", options_level, selection_mode="single", key="selection_level")
+
     if st.button("Pre-Flop Win Probability",  type='secondary', use_container_width=True):
         if len(st.session_state.my_cards) == 2:
             with st.spinner('Calculating...', show_time=True):
@@ -94,7 +100,8 @@ with col_calc_preflop:
                     flop_cards=None,
                     turn_card=None,
                     river_card=None,
-                    num_players=st.session_state.players_preflop
+                    num_players=st.session_state.players_preflop,
+                    tier=selection_level
                 )
             st.session_state.preflop_probability = prob_preflop
             st.session_state.step = 'flop'
@@ -163,6 +170,8 @@ with col_num_player_flop:
                 f"{st.session_state.selected_card5}{suits_symbols[st.session_state.selected_suit5]}")
 
 with col_calc_flop:
+    st.write("Level: Flop")
+    selection_level_flop = st.pills("Level", options_level, selection_mode="single", key="selection_level_flop")
     if st.button('Flop Win Probability'):
         if len(st.session_state.my_cards) == 2:
             with st.spinner('Calculating...', show_time=True):
@@ -173,7 +182,8 @@ with col_calc_flop:
                                 st.session_state.selected_card5+st.session_state.selected_suit5],
                     turn_card=None,
                     river_card=None,
-                    num_players=st.session_state.players_flop
+                    num_players=st.session_state.players_flop,
+                    tier=selection_level_flop
                 )
             st.session_state.flop_probability = prob_flop
             st.session_state.step = 'turn'
@@ -216,6 +226,9 @@ with col_num_player_turn:
                 f"{st.session_state.selected_card6}{suits_symbols[st.session_state.selected_suit6]}")
 
 with col_calc_turn:
+    st.write("Level: Turn")
+    selection_level_turn= st.pills("Level", options_level, selection_mode="single", key="selection_level_turn")
+
     if st.button('Calculate Turn Win Probability'):
         if len(st.session_state.my_cards) == 2:
             with st.spinner('Calculating...', show_time=True):
@@ -226,7 +239,8 @@ with col_calc_turn:
                                 st.session_state.selected_card5+st.session_state.selected_suit5],
                     turn_card=st.session_state.selected_card6+st.session_state.selected_suit6,
                     river_card=None,
-                    num_players=st.session_state.players_turn
+                    num_players=st.session_state.players_turn,
+                    tier=selection_level_turn
                 )
             st.session_state.turn_probability = prob_turn
             st.session_state.step = 'river'
@@ -270,6 +284,9 @@ with col_num_player_river:
                 f"{st.session_state.selected_card7}{suits_symbols[st.session_state.selected_suit7]}")
 
 with col_calc_river:
+    st.write("Level: River")
+    selection_level_river = st.pills("Level", options_level, selection_mode="single", key="selection_level_river")
+
     if st.button('Calculate River Win Probability'):
         if len(st.session_state.my_cards) == 2:
             with st.spinner('Calculating...', show_time=True):
@@ -280,7 +297,8 @@ with col_calc_river:
                                 st.session_state.selected_card5+st.session_state.selected_suit5],
                     turn_card=st.session_state.selected_card6+st.session_state.selected_suit6,
                     river_card=st.session_state.selected_card7+st.session_state.selected_suit7,
-                    num_players=st.session_state.players_river
+                    num_players=st.session_state.players_river,
+                    tier=selection_level_river
                 )
             st.session_state.river_probability = prob_river
             st.session_state.step = 'showdown'
